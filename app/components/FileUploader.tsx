@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import {useDropzone} from 'react-dropzone'
 import { formatSize } from '../lib/utils'
 interface FileUploaderProps {
@@ -6,10 +6,11 @@ interface FileUploaderProps {
 }
 
 const FileUploader = ({onFileSelect}: FileUploaderProps) => {
+  const [file, setFile] = useState<File | null>(null);
   const onDrop = useCallback((acceptedFiles: File[]) => {
-        const file = acceptedFiles[0] || null;
-
-        onFileSelect?.(file);
+    const selectedFile = acceptedFiles[0] || null;
+    setFile(selectedFile);
+    onFileSelect?.(selectedFile);
     }, [onFileSelect]);
   
 const maxFileSize = 20 * 1024 * 1024; 
@@ -20,7 +21,11 @@ const {getRootProps, getInputProps, isDragActive, acceptedFiles} = useDropzone({
     accept: {'application/pdf': ['.pdf']}, 
     maxSize: maxFileSize});
 
-const file = acceptedFiles[0]||null;
+ const handleRemove = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setFile(null);
+    onFileSelect?.(null);
+  };
 
   return (
   <div className="w-full gradient-border">
@@ -41,9 +46,7 @@ const file = acceptedFiles[0]||null;
                                     </p>
                                 </div>
                             </div>
-                            <button className="p-2 cursor-pointer" onClick={(e) => {
-                                onFileSelect?.(null)
-                            }}>
+                            <button className="p-2 cursor-pointer" onClick={handleRemove}>
                                 <img src="/icons/cross.svg" alt="remove" className="w-4 h-4" />
                             </button>
                         </div>

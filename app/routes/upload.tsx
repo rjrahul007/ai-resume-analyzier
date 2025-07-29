@@ -14,12 +14,19 @@ const upload = () => {
     const [isProcessing, setIsProcessing] = useState(false);
     const [statusText, setStatusText] = useState('');
     const [file, setFile] = useState<File | null>(null);
-    const handleFileSelect = (file: File) => {
+
+    const handleFileSelect = (file: File | null) => {
+        console.log("File selected:", file);
         setFile(file);
     }
 
  const handleAnalyze = async ({ companyName, jobTitle, jobDescription, file }: { companyName: string, jobTitle: string, jobDescription: string, file: File  }) => {
         setIsProcessing(true);
+        
+        setStatusText('Validating input...');
+        if (!companyName || !jobTitle || !jobDescription || !file) {
+        return setStatusText("Please fill in all fields and upload a resume.");
+        }
 
         setStatusText('Uploading the file...');
         const uploadedFile = await fs.upload([file]);
@@ -60,7 +67,7 @@ const upload = () => {
         await kv.set(`resume:${uuid}`, JSON.stringify(data));
         setStatusText('Analysis complete, redirecting...');
         console.log(data);
-        // navigate(`/resume/${uuid}`);
+        navigate(`/resume/${uuid}`);
     }
 
     const handleSumit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -95,7 +102,7 @@ const upload = () => {
                 <form action="" id='upload-form' onSubmit={handleSumit} className='flex flex-col gap-4 mt-8'>
                     <div className="form-div">
                         <label htmlFor="company-name">Company Name</label>
-                        <input type="text" name="comapny-name" placeholder='Company Name' id='company-name'/>
+                        <input type="text" name="company-name" placeholder='Company Name' id='company-name'/>
                     </div>
                     <div className="form-div">
                         <label htmlFor="job-title">Job Title</label>
