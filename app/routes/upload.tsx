@@ -16,7 +16,7 @@ const upload = () => {
     const [file, setFile] = useState<File | null>(null);
 
     const handleFileSelect = (file: File | null) => {
-        console.log("File selected:", file);
+        // console.log("File selected:", file);
         setFile(file);
     }
 
