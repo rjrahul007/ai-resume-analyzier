@@ -38,9 +38,9 @@ const auth = () => {
                 ):(
                     <>
                     {auth.isAuthenticated ? (
-                        <button className='auth-button' onClick={()=> auth.signOut()}>Logout</button>
+                        <button className='auth-button' onClick={()=> auth.signOut()}>Signout</button>
                     ):(
-                        <button className='auth-button' onClick={()=> auth.signIn()}>Login with Google</button>
+                        <button className='auth-button' onClick={()=> auth.signIn()}>Sign in with Putter</button>
                     )}
                     </>
                 )}
